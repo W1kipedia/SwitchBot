@@ -1,0 +1,2 @@
+did you really think I would put the token to the bot in here?
+Jokes aside, you would put the token to your discord bot inside of this file so that it could run
