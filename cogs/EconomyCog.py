@@ -47,9 +47,8 @@ class Economy(commands.Cog):
         self.client = client
 
     @commands.command()
+    @guild_only()
     async def economy(self, ctx):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         if ctx.message.author.is_on_mobile():
             embed = discord.Embed(title="economy menu (but for mobile)", description="anything related to money!",color=discord.Colour.blue())
             embed.add_field(name="1️⃣balance {optional pinging someone}", value="**check your balance**")
@@ -73,9 +72,8 @@ class Economy(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(aliases=("bal", "wallet", "mon", "money", "monz", "cash", "dough", "moolah", "monies", "monie"))
+    @guild_only()
     async def balance(self, ctx, member : discord.Member = None):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         if member == None:
             await open_account(ctx.message.author.id)
         else:
@@ -105,9 +103,8 @@ class Economy(commands.Cog):
         return
 
     @commands.command()
+    @guild_only()
     async def withdraw(self, ctx, amount = 0):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         await open_account(ctx.message.author.id)
 
         bal = await update_bank(ctx.message.author.id)
@@ -135,9 +132,8 @@ class Economy(commands.Cog):
         return
 
     @commands.command(aliases=("dep", "Deposit", "Dep"))
+    @guild_only()
     async def deposit(self, ctx, amount=None):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         await open_account(ctx.message.author.id)
         #Thanks Riptyde for this idea
         bal = await update_bank(ctx.message.author.id)
@@ -178,9 +174,8 @@ class Economy(commands.Cog):
 
     @cooldown(1, hour*12, BucketType.user)
     @commands.command()
+    @guild_only()
     async def beg(self, ctx):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         await open_account(ctx.message.author.id)\
 
         outcome = random.choice([True, False])
@@ -205,9 +200,8 @@ class Economy(commands.Cog):
         return
 
     @commands.command()
+    @guild_only()
     async def give(self, ctx, member : discord.Member=None, amount=None):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         if member == None:
             await ctx.send(f"""{ctx.message.author.mention}, you must put the command in this type of format:
                                 `s.give @Wiki#5420 69420`""")
