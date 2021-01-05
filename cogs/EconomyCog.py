@@ -114,6 +114,11 @@ class Economy(commands.Cog):
 
         amount = int(amount)
         if amount == 0:
+            msg = await ctx.send("You withdrew 0 snips!")
+            await asyncio.sleep(4.1)
+            await msg.edit(content="You're actually an idiot trying to withdraw nothing. Really just super stupid <:kek:746957664961036338>")
+            return
+        if amount == 0:
             await ctx.send('you must input an amount to withdraw')
             return
         if amount > bal[1]:
@@ -134,13 +139,12 @@ class Economy(commands.Cog):
         if str(ctx.message.channel.type).lower() == "private":
             return
         await open_account(ctx.message.author.id)
-
+        #Thanks Riptyde for this idea
         bal = await update_bank(ctx.message.author.id)
         if amount == "all":
             wallet = await update_bank(ctx.message.author.id)
             wallet = wallet[0]
             if wallet == 0:
-                #Thanks Riptyde for this idea
                 msg = await ctx.send("You deposited 0 snips!")
                 await asyncio.sleep(4.1)
                 await msg.edit(content="You're actually an idiot trying to deposit nothing. Really just super stupid <:kek:746957664961036338>")

@@ -24,8 +24,6 @@ class AllEvents(commands.Cog):
         beta = self.client.get_channel(693680984306221126)
         pp = self.client.get_guild(643082091961122816)
 
-        #this code needs some fixing to make it more efficent
-
         for crash in pp.emojis:
             if crash.name == "kirby":
                 global bazinga
@@ -53,8 +51,7 @@ class AllEvents(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        sample_message = str(message.content)
-        lower_message = sample_message.lower()
+        sample_message = str(message.content).lower()
         if not message.author.bot:
             if message.author.id == 547971853990494208:
                 if int(message.channel.id) == 738155429342871623:
@@ -75,7 +72,7 @@ class AllEvents(commands.Cog):
                     await message.add_reaction(no)
                     await message.add_reaction(thronking)
                     return
-            if profanity.contains_profanity(lower_message):
+            if profanity.contains_profanity(sample_message):
                 await message.delete()
                 await message.channel.send(content=f"{message.author.mention} you cannot use that word here", delete_after=5.0)
         return
@@ -84,8 +81,6 @@ class AllEvents(commands.Cog):
     async def on_member_update(self, before, after):
         if before.bot or after.bot:
             return
-
-        #we have such amazing boosters! But due to this, this code has never actually ran. So this might be unstable
 
         for r in before.roles:
             if r not in after.roles:
@@ -105,12 +100,10 @@ class AllEvents(commands.Cog):
     async def on_command_completion(self, ctx):
         print(f"the {ctx.command} command was invoked successfully by {ctx.message.author}!")
         if str(ctx.message.channel).lower() == "private":
-            print("^ this command was used in a DM") #this is a backup in case a command somehow gets executed in a DM
+            print("^ this command was used in a DM")
         return
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
-        #now this is where a BUNCH of problems come up
-        #the code is very messy and organization has been a hassle for me, and I hope that anyone can contribute to fix the code and make it a tad bit more pretty
         if str(error).lower().endswith("TypeError: object NoneType can't be used in 'await' expression".lower()):
             return
         try:
@@ -163,6 +156,5 @@ class AllEvents(commands.Cog):
         await ctx.send(content=error, delete_after=5.0)
         print(f"\n\nthe {ctx.command} command raised an error! {error}\n\n")
         return
-        
 def setup(client):
     client.add_cog(AllEvents(client))
