@@ -3,12 +3,16 @@ print("booting up...")
 #import all the good stuff
 import discord, datetime, os, sys, webbrowser
 from discord.ext import commands, tasks
-from discord.ext.commands import cooldown, BucketType, CommandOnCooldown
+from discord.ext.commands import cooldown, BucketType, CommandOnCooldown, guild_only
 from itertools import cycle
+
+from discord.ext.commands.core import guild_only
+#set all of the settings that are needed
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix = ["s.", "S."], intents=intents)
+now = datetime.datetime.now()
 client.remove_command("help")
-statuses = cycle(('cycle', 'cycle2'))
+statuses = cycle(('V2.1.04', 'github: https://github.com/W1kipedia/SwitchBot'))
 confirm = 0
 
 @client.event

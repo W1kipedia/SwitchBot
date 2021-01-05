@@ -1,6 +1,6 @@
 import discord, datetime, random, json
 from discord.ext import commands
-from discord.ext.commands import cooldown, BucketType, CommandOnCooldown
+from discord.ext.commands import cooldown, BucketType, CommandOnCooldown, guild_only
 class Images(commands.Cog):
     def __init__(self, client):
         self.client = client

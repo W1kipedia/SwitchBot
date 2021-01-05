@@ -1,6 +1,6 @@
 import discord, json, random, asyncio
 from discord.ext import commands
-from discord.ext.commands import BucketType, cooldown, CommandOnCooldown
+from discord.ext.commands import BucketType, cooldown, CommandOnCooldown, guild_only
 global hour
 hour = 60**2
 

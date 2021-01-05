@@ -1,6 +1,6 @@
 import discord, wikipedia
 from discord.ext import commands
-from discord.ext.commands import cooldown, BucketType, CommandOnCooldown
+from discord.ext.commands import cooldown, BucketType, CommandOnCooldown, guild_only
 from wikipedia.wikipedia import search
 
 class Wikipedia(commands.Cog):

@@ -1,6 +1,6 @@
 import discord, random, asyncio, os
 from discord.ext import commands
-from discord.ext.commands import cooldown, BucketType, CommandOnCooldown
+from discord.ext.commands import cooldown, BucketType, CommandOnCooldown, guild_only
 
 class Funni(commands.Cog):
     def __init__(self, client):

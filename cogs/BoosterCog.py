@@ -1,5 +1,5 @@
 import discord, better_profanity, json, random
-from discord.ext.commands import BucketType, cooldown, CommandOnCooldown
+from discord.ext.commands import BucketType, cooldown, CommandOnCooldown, guild_only
 from discord.ext import commands
 hour = 60*60
 
