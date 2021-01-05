@@ -109,7 +109,7 @@ class Funni(commands.Cog):
         await asyncio.sleep(1.7)
         for file in os.listdir("./sponsers"):
             if file.endswith('.txt'):
-                with open(os.path.join("C:\\Users\\jrizz\\Documents\\Python\\Discord-bot\\Switch-bot\\Switch-bot\\sponsers", file), 'r') as f:
+                with open(os.path.join("./sponsers", file), 'r') as f:
                     sponsers += f
         something_useful = str(random.choice(sponsers))
         andre = something_useful.split(',')
