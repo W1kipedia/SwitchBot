@@ -63,7 +63,7 @@ class Funni(commands.Cog):
                         'My reply is no.',
                         'My sources say no.',
                         'Outlook not so good.',
-                        'Very doubtful.',)
+                        'Very doubtful.')
             await ctx.send(f'Question: {question}\nAnswer: {random.choice(responses)}')
         return
 
@@ -96,10 +96,6 @@ class Funni(commands.Cog):
         if isinstance(error, CommandOnCooldown):
             await ctx.send(content=f"{ctx.message.author.mention} you're on cooldown for {error.retry_after:,.2f} seconds!", delete_after=error.retry_after)
         return
-
-
-    #this is a major issue, after trying to make the code a bit more pretty I made it unstable
-    #I currently am too busy to fix it, so if anyone is 
     """
     @cooldown(1, 60*60, BucketType.user)
     @commands.command(aliases=("sponsor", "spons"))
@@ -113,7 +109,7 @@ class Funni(commands.Cog):
         await asyncio.sleep(1.7)
         for file in os.listdir("./sponsers"):
             if file.endswith('.txt'):
-                with open(os.path.join("./sponsers", file), 'r') as f:
+                with open(os.path.join("C:\\Users\\jrizz\\Documents\\Python\\Discord-bot\\Switch-bot\\Switch-bot\\sponsers", file), 'r') as f:
                     sponsers += f
         something_useful = str(random.choice(sponsers))
         andre = something_useful.split(',')
@@ -163,12 +159,7 @@ class Funni(commands.Cog):
     @delay.error
     async def delay_error(self, ctx, error):
         if isinstance(error, CommandOnCooldown):
-            user = ctx.message.author.name
-            tag = ctx.message.author.discriminator
-            if (user, tag)==("Bob557", "5208") or ctx.message.author.id == 312726571079303168:
-                await ctx.send(content=f"Haha, fuck you bob. You're on cooldown for {error.retry_after:,.2f} seconds", delete_after=error.retry_after)
-            else:
-                await ctx.send(content=f"{ctx.message.author.mention} you're on cooldown for {error.retry_after:,.2f} seconds", delete_after=error.retry_after)
+            await ctx.send(content=f"{ctx.message.author.mention} you're on cooldown for {error.retry_after:,.2f} seconds", delete_after=error.retry_after)
         return
 
 def setup(client):
