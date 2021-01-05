@@ -7,9 +7,8 @@ class Funni(commands.Cog):
         self.client = client
 
     @commands.command(aliases=('funni_menu', "funni_help"))
+    @guild_only()
     async def funni(self, ctx):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         if ctx.message.author.is_on_mobile():
             embed = discord.Embed(title="funni menu (but for mobile)", description="all funni commands that you can use", color=discord.Colour.blue())
             embed.add_field(name="1️⃣delay", value="**shows the delay between me and the server**")
@@ -38,9 +37,8 @@ class Funni(commands.Cog):
         return
 
     @commands.command(aliases=('8ball', 'eight_ball'))
+    @guild_only()
     async def eightball(self, ctx, *, question=None):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         if question==None:
             await ctx.send(f"bruh you need to put a question {ctx.message.author.mention}")
         else:
@@ -68,9 +66,8 @@ class Funni(commands.Cog):
         return
 
     @commands.command(aliases=('owo', 'owo_translate'))
+    @guild_only()
     async def OwO(self, ctx, *, context):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         translate = ""
         for letter in context:
             if letter == "o" or letter == "O":
@@ -84,9 +81,8 @@ class Funni(commands.Cog):
 
     @cooldown(1, 3, BucketType.user)
     @commands.command()
+    @guild_only()
     async def coinflip(self, ctx):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         possible = ('Heads!', 'Tails!', 'Heads!', 'Tails!', 'fuck, I dropped the coin. Use the command again')
 
         await ctx.send(f'{random.choice(possible)}')
@@ -99,9 +95,8 @@ class Funni(commands.Cog):
     """
     @cooldown(1, 60*60, BucketType.user)
     @commands.command(aliases=("sponsor", "spons"))
+    @guild_only()
     async def sponser(self, ctx):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         sponsers = []
         await ctx.send("don't forget to..")
         await asyncio.sleep(1.2)
@@ -128,9 +123,8 @@ class Funni(commands.Cog):
         return
     """
     @commands.command()
+    @guild_only()
     async def encrypt(self, ctx, *, context):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         message_to_send = ""
         for i in range(0, len(context)):
             message_to_send = message_to_send + chr(ord(context[i]) - 2)
@@ -138,9 +132,8 @@ class Funni(commands.Cog):
         await ctx.send(message_to_send)
         return
     @commands.command()
+    @guild_only()
     async def decrypt(self, ctx, *, context):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         message_to_send = ""
         for i in range(0, len(context)):
             message_to_send = message_to_send + chr(ord(context[i]) + 2)
@@ -149,9 +142,8 @@ class Funni(commands.Cog):
 
     @cooldown(1, 5, BucketType.user)
     @commands.command(aliases=("ping", "pong"))
+    @guild_only()
     async def delay(self, ctx):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         msg = await ctx.send("⚙ calculating...")
         await asyncio.sleep(3)
         await msg.edit(content=f'💡 message delay is {round(self.client.latency * 1000)}ms')

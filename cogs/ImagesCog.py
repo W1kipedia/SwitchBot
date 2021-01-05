@@ -6,9 +6,8 @@ class Images(commands.Cog):
         self.client = client
 
     @commands.command(aliases=("images", "image_menu", "image_misc"))
+    @guild_only()
     async def image_commands(self, ctx):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         if ctx.message.author.is_on_mobile():
             embed = discord.Embed(title="Image Menu (but for mobile)", description="a menu of images that you can bring up!(you can submit some images to me so i can add it to the list :D)", color=discord.Colour.blue())
             embed.set_footer(text=f"Command by {ctx.message.author.name}", icon_url=ctx.message.author.avatar_url)
@@ -40,9 +39,8 @@ class Images(commands.Cog):
 
     @cooldown(1, 5, BucketType.user)
     @commands.command()
+    @guild_only()
     async def joe(self, ctx):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         embed = discord.Embed(title="Joe moment", description="")
         embed.set_footer(text=f"Command by {ctx.message.author.name}", icon_url=ctx.message.author.avatar_url)
         embed.set_image(url="https://media.discordapp.net/attachments/693941496147214357/753068754228871309/cat_next_to_camera.jpg")
@@ -55,9 +53,8 @@ class Images(commands.Cog):
 
     @cooldown(1, 15, BucketType.user)
     @commands.command()
+    @guild_only()
     async def joey(self, ctx):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         embed = discord.Embed(title="Joey Moment", description="")
         embed.set_image(url="https://media.discordapp.net/attachments/693941496147214357/762032313567019048/IMG_20201003_102333.jpg?width=555&height=475")
         embed.set_footer(text=f"Command by {ctx.message.author.name}", icon_url=ctx.message.author.avatar_url)
@@ -71,9 +68,8 @@ class Images(commands.Cog):
 
     @cooldown(2, 10, BucketType.user)
     @commands.command()
+    @guild_only()
     async def cryson(self, ctx):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         embed = discord.Embed(title="p     a       i      n", description="", color=discord.Colour.red())
         embed.set_image(url="https://media.discordapp.net/attachments/693942287910305842/767628023251206174/pfpcarson.gif?width=475&height=475")
         embed.set_footer(text=f"Command by {ctx.message.author.name}", icon_url=ctx.message.author.avatar_url)
@@ -87,9 +83,8 @@ class Images(commands.Cog):
 
     @cooldown(2, 15, BucketType.user)
     @commands.command()
+    @guild_only()
     async def cole(self, ctx):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         embed = discord.Embed(title="cole moment", description="")
         embed.set_image(url="https://media.discordapp.net/attachments/693941496147214357/768460791962664970/20201021_000957.jpg")
         embed.set_footer(text=f"Command by {ctx.message.author.name}", icon_url=ctx.message.author.avatar_url)
@@ -103,9 +98,8 @@ class Images(commands.Cog):
 
     @cooldown(1, 86400, BucketType.user)
     @commands.command(aliases=("doncon", "DONCON"))
+    @guild_only()
     async def derp(self, ctx):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         embed = discord.Embed(title="", description="")
         embed.set_footer(text=f"Command by {ctx.message.author.name}", icon_url=ctx.message.author.avatar_url)
         embed.set_image(url="https://media.discordapp.net/attachments/626617640634286081/754460623496151182/image0.png")
@@ -122,12 +116,11 @@ class Images(commands.Cog):
             seconds = time
             await ctx.send(str(f"{ctx.author.mention} sorry to say but, you're on cooldown from using doncon for " + "%d hours, %d minutes, and %d seconds" % (hour, minutes, seconds)))
         return
-    
+
     @cooldown(1, 15, BucketType.user)
     @commands.command()
+    @guild_only()
     async def perhaps(self, ctx):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         dropping = ["https://media.discordapp.net/attachments/609936758100066311/755835062066479174/perhaps.jpg",
                     "https://media.discordapp.net/attachments/693942287910305842/753764523261034566/perhaps1.jpg?width=394&height=475"]
         random_thing = random.choice(dropping)
@@ -144,12 +137,11 @@ class Images(commands.Cog):
         if isinstance(error, CommandOnCooldown):
             await ctx.send(content=f"{ctx.message.author.mention} you're on cooldown for {error.retry_after:,.2f} seconds 😳", delete_after=error.retry_after)
             return
-    
+
     @cooldown(1, 15, BucketType.user)
     @commands.command()
+    @guild_only()
     async def candice(self, ctx):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         embed = discord.Embed(title="Candice moment", description="")
         embed.set_footer(text=f"Command by {ctx.message.author.name}", icon_url=ctx.message.author.avatar_url)
         embed.set_image(url="https://media.discordapp.net/attachments/693942287910305842/753749038356103318/cat_next_to_camera2.jpg")
@@ -162,9 +154,8 @@ class Images(commands.Cog):
 
     @commands.command()
     @cooldown(1, 15, BucketType.user)
+    @guild_only()
     async def alex(self, ctx):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         embed = discord.Embed(title="Alex moment")
         embed.set_image(url="https://media.discordapp.net/attachments/693941496147214357/773255455857704980/image0.png?width=465&height=475")
         embed.set_footer(text=f"Command by {ctx.message.author.name}", icon_url=ctx.message.author.avatar_url)
@@ -178,9 +169,8 @@ class Images(commands.Cog):
 
     @commands.command()
     @cooldown(1, 15, BucketType.user)
+    @guild_only()
     async def chester(self, ctx):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         embed = discord.Embed(title="Chester moment")
         embed.set_image(url="https://media.discordapp.net/attachments/693680984306221126/777590561393082388/20201115_124701.jpg?width=470&height=474")
         embed.set_footer(text=f"Command by {ctx.message.author.name}", icon_url=ctx.message.author.avatar_url)

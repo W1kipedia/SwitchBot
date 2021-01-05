@@ -36,18 +36,14 @@ async def update_bank(user_id, change = 0, mode = "wallet"):
 
 
 
-#all the code above is just used for functional programming to make stuff easier to separate for the code below
-
-
-
+#all the code above is just used for functional programming to make stuff easier for the code below
 class Gambling(commands.Cog):
     def __init__(self, client):
         self.client = client
 
     @commands.command()
+    @guild_only()
     async def gambling(self, ctx):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         if ctx.message.author.is_on_mobile():
             embed = discord.Embed(title="Gambling menu", description="the gambling menu to fill your gambling addiction")
             embed.add_field(name="1️⃣gambleflip", value="**it's like coinflipping but gambling**")
@@ -65,9 +61,8 @@ class Gambling(commands.Cog):
 
     @cooldown(1, 30, BucketType.user)
     @commands.command()
+    @guild_only()
     async def gambleflip(self, ctx, amount=0):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         await open_account(ctx.message.author.id)
 
         bal = await update_bank(ctx.message.author.id)
@@ -111,9 +106,8 @@ class Gambling(commands.Cog):
 
     @cooldown(1, 60*12, BucketType.user)
     @commands.command(aliases=("mug", "steal", "Steal", "Mug"))
+    @guild_only()
     async def rob(self, ctx, member:discord.Member=None):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         if member == None:
             await ctx.send(f"{ctx.message.author.mention}, you have to put a user to have to steal from, enjoy your cooldown because Wiki's too lazy to program a way to preven this <:kek:777419299261513728>")
             return

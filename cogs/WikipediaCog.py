@@ -8,9 +8,8 @@ class Wikipedia(commands.Cog):
         self.client = client
 
     @commands.command(aliases=("Wikipedia_menu", "Wiki_menu", "wiki_menu"))
+    @guild_only()
     async def wikipedia_menu(self, ctx):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         if ctx.message.author.is_on_mobile():
             embed = discord.Embed(title="Wikipedia menu (but for mobile)", description="if you want to search up an article, you can now!", color = discord.Colour.dark_red())
             embed.set_footer(text=f"Command by {ctx.message.author.name}", icon_url=ctx.message.author.avatar_url)
@@ -29,9 +28,8 @@ class Wikipedia(commands.Cog):
         return
 
     @commands.command(aliases=("Wiki_search", "Wikipedia_search", "wikipedia_search"))
+    @guild_only()
     async def wiki_search(self, ctx, *, search=""):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         if search == "" or search == " ":
             await ctx.send("you didn't put anything to search for")
         if ctx.message.channel.id == 693942287910305842:
@@ -44,15 +42,10 @@ class Wikipedia(commands.Cog):
             await ctx.send(f"this command is only allowed in <#693942287910305842>")
         return
 
-
-    #for the summary and page I need help with notifying the person who triggers the command that the page is over the character limit
-    #either by putting it in an embed or finding a way to catch the err
-    #also the error catching is inefficient, and any help to fix any of these is appreciated
     @cooldown(1, 10, BucketType.user)
     @commands.command()
+    @guild_only()
     async def wiki_summary(self, ctx, * , search=""):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         if search == "" or search == " ":
             await ctx.send("it seems you didn't put anything in your search")
             return
@@ -83,9 +76,8 @@ class Wikipedia(commands.Cog):
 
     @cooldown(1, 10, BucketType.user)
     @commands.command()
+    @guild_only()
     async def wiki_page(self, ctx, *, search=""):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         if search == "" or search == " ":
             await ctx.send("it seems you didn't put anything in your search")
             return
