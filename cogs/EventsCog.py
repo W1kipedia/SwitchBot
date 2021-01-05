@@ -3,7 +3,6 @@ from discord.ext import commands
 from better_profanity import profanity
 profanity.load_censor_words_from_file("./data/profanity.txt")
 
-#work on an automatic way for reactions to be added whenever you post in #big-brain-thoughts
 
 
 class AllEvents(commands.Cog):
@@ -76,12 +75,6 @@ class AllEvents(commands.Cog):
             if profanity.contains_profanity(sample_message):
                 await message.delete()
                 await message.channel.send(content=f"{message.author.mention} you cannot use that word here", delete_after=5.0)
-            # else:
-            #     if str(message.channel.type).lower() == "private":
-            #         return
-            #     with open(r"C:\Users\jrizz\Documents\Python\Discord-bot\Switch-bot\Switch-bot\msglogs\msg_for_12-4-2020.txt", 'a', encoding="utf-8") as f:
-            #         f.write(f"{message.author} {datetime.datetime.now()} {message.channel.name}: {message.content}\n")
-            #     return
         return
 
     @commands.Cog.listener()
