@@ -3,7 +3,7 @@ from gtts import gTTS
 from discord.ext import commands
 from better_profanity import profanity
 import discord, os
-profanity.load_censor_words_from_file("C:\\Users\\jrizz\\Documents\\Python\\Discord-bot\\Switch-bot\\Switch-bot\\data\\profanity.txt")
+profanity.load_censor_words_from_file("./data/profanity.txt")
 
 class tts(commands.Cog):
     def __init__(self, client):
