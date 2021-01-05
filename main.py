@@ -5,39 +5,28 @@ import discord, datetime, os, sys, webbrowser
 from discord.ext import commands, tasks
 from discord.ext.commands import cooldown, BucketType, CommandOnCooldown
 from itertools import cycle
-
-#I personally prefer using all the intents, but most people can just use the default by doing
-#intents = discord.Intents.default()
-#instead
-
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix = ["s.", "S."], intents=intents)
-#removing the help command so that I can make one that's going to override it
 client.remove_command("help")
 statuses = cycle(('cycle', 'cycle2'))
-
 confirm = 0
-#^ this variable is declared for the opt_in() and opt_out() command
 
 @client.event
 async def on_ready():
-    change_status.start() #and this just starts the cycle for the status changes
+    change_status.start()
     print("bot is online.")
-    print(datetime.datetime.now()) 
+    print(datetime.datetime.now())
     return
 
 @tasks.loop(seconds=5)
 async def change_status():
-    await client.change_presence(activity=discord.Game(next(statuses))) #this is the cycle that always keeps on going while the bot is online
+    await client.change_presence(activity=discord.Game(next(statuses)))
     return
 
 @client.command(aliases=('commands', 'menu'))
+@guild_only()
 async def help(ctx):
-    if str(ctx.message.channel.type).lower() == "private":
-        return
-    if ctx.message.author.is_on_mobile(): 
-        #if the person who triggered the command is on mobile it will choose to either show them a mobile-friendly menu or otherwise
-        #this is a repeated step for all help menus, so there won't be much to comment on them
+    if ctx.message.author.is_on_mobile():
         embed = discord.Embed(title="Help menu (but for mobile)",
         description="to show all the commands that are currently programmed into me!",
         color=discord.Colour.green())
@@ -73,7 +62,6 @@ async def help(ctx):
 async def restart(ctx, seconds=None):
     name = ctx.message.author.name
     tag = ctx.message.author.discriminator
-    #you will also see this very frequently to see if the programmer (me) is triggering the command
     if (name, tag)==("Wiki", "5420"):
         await client.change_presence(activity=discord.Game("restarting..."))
         await ctx.send("restarting...")
@@ -86,7 +74,6 @@ async def restart(ctx, seconds=None):
         await ctx.send("sorry but you're not wiki")
     return
 
-#these commands restricts someone from opening a website on my browser
 @client.command()
 async def opt_in(ctx):
     name = ctx.message.author.name
@@ -122,7 +109,6 @@ async def go_offline(ctx):
         await ctx.send(f"{ctx.message.author.mention} you're not the creator, you cannot use this command")
     return
 
-#this command works with the opt_in() and opt_out() commands
 @client.command()
 @cooldown(1, 7200, BucketType.user)
 async def open_url(ctx, url=None):
@@ -152,7 +138,6 @@ async def open_url_error(ctx, error):
         await ctx.send(f"{ctx.message.author.mention} you're on cooldown for:\n" + "%d hours, %d minutes, and %d seconds" % (hour, minutes, seconds))
     return
 
-#all the commands down are concerning cogs, so if you are not interested in that you can close this file
 for filename in os.listdir("./cogs"):
     if filename.endswith(".py"):
         client.load_extension(f"cogs.{filename[:-3]}")
@@ -239,9 +224,6 @@ async def reload_error(ctx, error):
         await ctx.send(content="❌||**The cog hasn't been loaded in!**", delete_after=3.3)
         return
 
-#this currently is a temporarily solution to stop cogs from being accessed by anyone
-#currently needs a fix to where it doesn't automatically load in the cog first and then unload it
-#(mostly because if there's an error in the code you'll have to move the file from the cogs folder to run the bot)
 try:
     blacklisted_cog = sys.argv[1]
     client.unload_extension(f"cogs.{blacklisted_cog}")
