@@ -37,7 +37,7 @@ async def update_bank(user_id, change = 0, mode = "wallet"):
 
 
 
-#all the code above is just used for functional programming to make stuff easier for the code below
+#all the code above is just used for functional programming to make stuff easier to separate for the code below
 
 
 
@@ -68,7 +68,6 @@ class Economy(commands.Cog):
         embed.add_field(name="withdraw", value="`withdraw any money from the bank`")
         embed.add_field(name="deposit", value="`put any money into the bank`")
         embed.add_field(name="beg", value="`when you're too poor you can get beg for some money`")
-        #nice
         embed.add_field(name="gambling", value="`if you want to gamble your life away, you can do it here!`")
         embed.set_footer(text=f"Command by {ctx.message.author.name}", icon_url=ctx.message.author.avatar_url)
         await ctx.send(embed=embed)
@@ -140,7 +139,7 @@ class Economy(commands.Cog):
         if str(ctx.message.channel.type).lower() == "private":
             return
         await open_account(ctx.message.author.id)
-
+        #Thanks Riptyde for this idea
         bal = await update_bank(ctx.message.author.id)
         if amount == "all":
             wallet = await update_bank(ctx.message.author.id)
@@ -210,7 +209,7 @@ class Economy(commands.Cog):
         if str(ctx.message.channel.type).lower() == "private":
             return
         if member == None:
-            await ctx.send(f"""{ctx.message.author.mention}, you must put the commad in this type of format:
+            await ctx.send(f"""{ctx.message.author.mention}, you must put the command in this type of format:
                                 `s.give @Wiki#5420 69420`""")
             return
         await open_account(ctx.message.author.id)
