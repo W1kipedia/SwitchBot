@@ -3,7 +3,7 @@ from gtts import gTTS
 from discord.ext import commands
 from better_profanity import profanity
 import discord, os
-profanity.load_censor_words_from_file("./data/profanity.txt")
+profanity.load_censor_words_from_file("C:\\Users\\jrizz\\Documents\\Python\\Discord-bot\\Switch-bot\\Switch-bot\\data\\profanity.txt")
 
 class tts(commands.Cog):
     def __init__(self, client):
@@ -29,9 +29,8 @@ class tts(commands.Cog):
         await ctx.send(embed=embed)
         return
 
-    #for the gtts documentation there is an ability to slow the text or change the language.
-    #if anyone is able to find a solution on a way to do that while also making it optional and still putting in the prompt without errs
-    #please feel free to contribute
+#come back to this another time whenever you learn *args so you can use a true or false boolean
+
     @commands.command() 
     async def speak(self, ctx,*, prompt = None):
         if str(ctx.message.channel.type).lower() == "private":
@@ -51,7 +50,7 @@ class tts(commands.Cog):
         output = gTTS(text=prompt)
         output.save("playing.mp3")
         voice = discord.utils.get(self.client.voice_clients, guild=ctx.message.guild)
-        await voice.play(discord.FFmpegPCMAudio("./playing.mp3"))
+        await voice.play(discord.FFmpegPCMAudio("./playing.mp3", after=os.remove("playing.mp3")))
         await voice.disconnect()
         return
 
