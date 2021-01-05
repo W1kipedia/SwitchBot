@@ -46,9 +46,8 @@ class booster(commands.Cog):
         self.client = client
 
     @commands.command()
+    @guild_only()
     async def booster_menu(self, ctx):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         if ctx.message.author.is_on_mobile():
             embed = discord.Embed(title="The booster menu (but for mobile)", color=discord.Colour.purple())
             embed.add_field(name="1️⃣preview", value="**get the latest preview of newest Switch N Snap video that's in the making**")
@@ -69,13 +68,9 @@ class booster(commands.Cog):
     @commands.command()
     @commands.has_role(661115568450961410)
     @cooldown(1, 60*69, BucketType.user)
+    @guild_only()
     async def change_role_name(self, ctx, *, name=None):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         better_profanity.profanity.load_censor_words()
-
-        #this is actually where the code gets really messy, if anyone would like to contribute ot make it more cleaner
-        #would be apreciated :D
 
         if name == "" or name == " " or name == None:
             await ctx.send(f"{ctx.message.author.mention}, you have to input a role name")
@@ -121,9 +116,8 @@ class booster(commands.Cog):
 
     @commands.command()
     @commands.has_role(661115568450961410)
+    @guild_only()
     async def preview(self, ctx):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         with open("./data/latest_video.txt", 'r', encoding="utf-8") as f:
             video = f.read()
         if video == "" or video == " ":
@@ -146,9 +140,8 @@ class booster(commands.Cog):
     @commands.command()
     @commands.has_role(661115568450961410)
     @cooldown(1, hour*12, BucketType.user)
+    @guild_only()
     async def extra_bonus(self, ctx):
-        if str(ctx.message.channel.type).lower() == "private":
-            return
         await open_account(ctx.message.author.id)
         await get_bank_data()
 
