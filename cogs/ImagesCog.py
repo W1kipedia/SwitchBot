@@ -15,9 +15,9 @@ class Images(commands.Cog):
             embed.add_field(name="2️⃣joey", value="**joey moment (joe's son)**")
             embed.add_field(name="3️⃣cole", value="**cole moment (joe's brother)**")
             embed.add_field(name="4️⃣alex", value="**alex moment (joey's uncle)**")
-            embed.add_field(name="5️⃣chester", value="**chester moment (joe's father/joey's grandpa)**")
+            #embed.add_field(name="5️⃣chester", value="**chester moment (joe's father/joey's grandpa)**")
             embed.add_field(name="6️⃣derp", value="**this exists..that's kinda it**")
-            embed.add_field(name="7️⃣cryson", value="**When you feel nothing but pain**")
+            #embed.add_field(name="7️⃣cryson", value="**When you feel nothing but pain**")
             embed.add_field(name="8️⃣candice", value="**candice moment (joe's bigger sister)**")
             embed.add_field(name="9️⃣perhaps", value="**whenever someone says probably always respond with this command**")
             await ctx.send(embed=embed)
@@ -29,9 +29,9 @@ class Images(commands.Cog):
         embed.add_field(name="joey", value="`joey moment (joe's son)`")
         embed.add_field(name="cole", value="`cole moment (joe's brother)`")
         embed.add_field(name="alex", value="`alex moment (joey's uncle)`")
-        embed.add_field(name="chester", value="`chester moment (joe's father/joey's grandpa)`")
+        #embed.add_field(name="chester", value="`chester moment (joe's father/joey's grandpa)`")
         embed.add_field(name="derp", value="`this exists..that's kinda it`")
-        embed.add_field(name="cryson", value="`When you feel nothing but pain`")
+        #embed.add_field(name="cryson", value="`When you feel nothing but pain`")
         embed.add_field(name="candice", value="`candice moment (joe's bigger sister)`")
         embed.add_field(name="perhaps", value="`whenever someone says probably always respond with this command`")
         await ctx.send(embed=embed)
@@ -66,6 +66,7 @@ class Images(commands.Cog):
             await ctx.send(content=f"{ctx.message.author.mention} you're on cooldown for {error.retry_after:,.2f} seconds man :pensive:", delete_after=error.retry_after)
         return
 
+    """
     @cooldown(2, 10, BucketType.user)
     @commands.command()
     @guild_only()
@@ -80,6 +81,7 @@ class Images(commands.Cog):
         if isinstance(error, CommandOnCooldown):
             await ctx.send(content=f"{ctx.message.author.mention} gamer you're on cooldown for {error.retry_after:,.2f} seconds\ngo drink some milk or something while you're waiting", delete_after=error.retry_after)
         return
+    """
 
     @cooldown(2, 15, BucketType.user)
     @commands.command()
@@ -166,7 +168,7 @@ class Images(commands.Cog):
         if isinstance(error, CommandOnCooldown):
             await ctx.send(content=f"{ctx.message.author.mention}, you're on cooldown for {error.retry_after:,.2f} seconds", delete_after=error.retry_after)
         return
-
+    '''
     @commands.command()
     @cooldown(1, 15, BucketType.user)
     @guild_only()
@@ -181,7 +183,7 @@ class Images(commands.Cog):
         if isinstance(error, CommandOnCooldown):
             await ctx.send(content=f"{ctx.message.author.mention}, you're on cooldown for {error.retry_after:,.2f} seconds", delete_after=error.retry_after)
         return
-
+    '''
 
 def setup(client):
     client.add_cog(Images(client))
