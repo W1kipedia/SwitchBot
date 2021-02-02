@@ -54,9 +54,7 @@ class AllEvents(commands.Cog):
         sample_message = str(message.content).lower()
         if not message.author.bot:
             if message.content.startswith("<@!752666067536576512>"):
-                msg = await message.channel.send(f"what do you want {message.author.mention}, you know you can just do `s.help` to get all the commands right?")
-                asyncio.sleep(5)
-                await msg.delete()
+                await message.channel.send(content=f"what do you want {message.author.mention}, you know you can just do `s.help` to get all the commands right?", delete_after=5.0)
                 return
             if message.author.id == 547971853990494208:
                 if int(message.channel.id) == 738155429342871623:
