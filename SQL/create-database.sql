@@ -1,4 +1,4 @@
-DROP DATABASE IF EXISTS `SwitchBot`;
+DROP DATABASE IF EXISTS `SwitchBot`; --you can rename these to whatever you want just make sure to watch out with this command
 CREATE DATABASE `SwitchBot`;
 USE `SwitchBot`;
 SET NAMES UTF8;
