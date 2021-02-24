@@ -1,4 +1,5 @@
 import discord, json, os, random, asyncio
+import mysql.connector as mysql
 from discord.ext import commands
 from discord.ext.commands import BucketType, cooldown, CommandOnCooldown, guild_only
 
@@ -10,28 +11,76 @@ async def get_bank_data():
     return users
 
 async def open_account(user_id):
-    users = await get_bank_data()
+    try:
+        tempdb = mysql.connect(
+            host = "localhost",
+            database = "SwitchBot",
+            user = "clientSidePers",
+            password = "2H6r4H#jyu7J"
+        )
+        tempcur = tempdb.cursor()
 
-    if str(user_id) in users:
-        return False
-    else:
-        users[str(user_id)] = {}
-        users[str(user_id)]["wallet"] = 69
-        users[str(user_id)]["bank"] = 420
+        users = []
+        tempcur.execute("SELECT `client_id` FROM `Economy`;")
+        for user in tempcur:
+            users.append(user[0])
+        if str(user_id) in users:
+            tempcur.close()
+            tempdb.close()
+            return False
+        else:
+            tempcur.execute(f"INSERT INTO `Economy` VALUES ('{str(user_id)}', 69, 420)")
+            tempdb.commit()
+            tempcur.close()
+            tempdb.close()
+            return True
+    except:
+        users = await get_bank_data()
 
-    with open("./data/mainbank.json", 'w', encoding="utf-8") as f:
-        json.dump(users, f)
+        if str(user_id) in users:
+            return False
+        else:
+            users[str(user_id)] = {}
+            users[str(user_id)]["wallet"] = 69
+            users[str(user_id)]["bank"] = 420
+
+        with open("./data/mainbank.json", 'w', encoding="utf-8") as f:
+            json.dump(users, f)
     return True
 
 async def update_bank(user_id, change = 0, mode = "wallet"):
-    users = await get_bank_data()
+    try:
+        tempdb = mysql.connect(
+            host = "localhost",
+            database = "SwitchBot",
+            user = "clientSidePers",
+            password = "2H6r4H#jyu7J"
+        )
+        tempcur = tempdb.cursor()
 
-    users[str(user_id)][mode] += change
+        tempcur.execute(f"UPDATE `Economy` SET {mode} = {mode} + {change} WHERE client_id = '{str(user_id)}';")
+        tempdb.commit()
 
-    with open("./data/mainbank.json", 'w', encoding="utf-8") as f:
-        json.dump(users, f)
-    bal = users[str(user_id)]["wallet"], users[str(user_id)]["bank"]
-    return bal
+        tempcur.execute(f"SELECT `wallet`, `bank` WHERE client_id = '{str(user_id)}';")
+
+        for entry in tempcur:
+            ballet, wank = entry[0], entry[1]
+        tempcur.close()
+        tempdb.close()
+
+        bal = ballet, wank
+        return bal
+
+    except Exception as e:
+        print(e)
+        users = await get_bank_data()
+
+        users[str(user_id)][mode] += change
+
+        with open("./data/mainbank.json", 'w', encoding="utf-8") as f:
+            json.dump(users, f)
+        bal = users[str(user_id)]["wallet"], users[str(user_id)]["bank"]
+        return bal
 #---------------------------------------------------------------------------------------------------------------------------
 
 

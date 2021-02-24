@@ -1,46 +1,90 @@
 import discord, json, random, asyncio
+import mysql.connector as mysql
 from discord.ext import commands
 from discord.ext.commands import BucketType, cooldown, CommandOnCooldown, guild_only
 global hour
 hour = 60**2
 
 #----------------------------------------------------------------------------------
+
 async def get_bank_data():
     with open("./data/mainbank.json", 'r', encoding="utf-8") as f:
         users = json.load(f)
     return users
 
+
 async def open_account(user_id):
-    users = await get_bank_data()
+    try:
+        tempdb = mysql.connect(
+            host = "localhost",
+            database = "SwitchBot",
+            user = "",
+            password = ""
+        )
+        tempcur = tempdb.cursor()
 
-    if str(user_id) in users:
-        return False
-    else:
-        users[str(user_id)] = {}
-        users[str(user_id)]["wallet"] = 69
-        users[str(user_id)]["bank"] = 420
+        users = []
+        tempcur.execute("SELECT `client_id` FROM `Economy`;")
+        for user in tempcur:
+            users.append(user[0])
+        if str(user_id) in users:
+            tempcur.close()
+            tempdb.close()
+            return False
+        else:
+            tempcur.execute(f"INSERT INTO `Economy` VALUES ('{str(user_id)}', 69, 420)")
+            tempdb.commit()
+            tempcur.close()
+            tempdb.close()
+            return True
+    except:
+        users = await get_bank_data()
 
-    with open("./data/mainbank.json", 'w', encoding="utf-8") as f:
-        json.dump(users, f)
+        if str(user_id) in users:
+            return False
+        else:
+            users[str(user_id)] = {}
+            users[str(user_id)]["wallet"] = 69
+            users[str(user_id)]["bank"] = 420
+
+        with open("./data/mainbank.json", 'w', encoding="utf-8") as f:
+            json.dump(users, f)
     return True
 
 async def update_bank(user_id, change = 0, mode = "wallet"):
-    users = await get_bank_data()
+    try:
+        tempdb = mysql.connect(
+            host = "localhost",
+            database = "SwitchBot",
+            user = "",
+            password = ""
+        )
+        tempcur = tempdb.cursor()
 
-    users[str(user_id)][mode] += change
+        tempcur.execute(f"UPDATE `Economy` SET {mode} = {mode} + {change} WHERE client_id = '{str(user_id)}';")
+        tempdb.commit()
 
-    with open("./data/mainbank.json", 'w', encoding="utf-8") as f:
-        json.dump(users, f)
-    bal = users[str(user_id)]["wallet"], users[str(user_id)]["bank"]
-    return bal
+        tempcur.execute(f"SELECT `wallet`, `bank` WHERE client_id = '{str(user_id)}';")
+
+        for entry in tempcur:
+            ballet, wank = entry[0], entry[1]
+        tempcur.close()
+        tempdb.close()
+
+        bal = ballet, wank
+        return bal
+
+    except Exception as e:
+        print(e)
+        users = await get_bank_data()
+
+        users[str(user_id)][mode] += change
+
+        with open("./data/mainbank.json", 'w', encoding="utf-8") as f:
+            json.dump(users, f)
+        bal = users[str(user_id)]["wallet"], users[str(user_id)]["bank"]
+        return bal
 #---------------------------------------------------------------------------------------------------------------------------
-
-
-
-#all the code above is just used for functional programming to make stuff easier to separate for the code below
-
-
-
 
 class Economy(commands.Cog):
     def __init__(self, client):
@@ -74,32 +118,76 @@ class Economy(commands.Cog):
     @commands.command(aliases=("bal", "wallet", "mon", "money", "monz", "cash", "dough", "moolah", "monies", "monie"))
     @guild_only()
     async def balance(self, ctx, member : discord.Member = None):
-        if member == None:
-            await open_account(ctx.message.author.id)
-        else:
-            try:
-                await open_account(member.id)
-            except:
-                await ctx.send(f"{ctx.message.author.mention}, it seems that I'm not able to retrieve this person")
-                return
+        try:
+            #init
+            db = mysql.connect(
+                host = "localhost",
+                database = "SwitchBot",
+                user = "",
+                password = ""
+            )
+            cursor = db.cursor()
 
-        users = await get_bank_data()
+            #making sure that person is put into the db
+            persconfirm = False
+            cursor.execute("SELECT `client_id` FROM `Economy`;")
+            for pers in cursor:
+                if pers[0] != str(ctx.message.author.id):
+                    pass
+                else:
+                    persconfirm = True
+            if persconfirm == False:
+                await open_account(ctx.message.author.id)
 
-        if member == None:
-            wallet_amt = users[str(ctx.message.author.id)]["wallet"]
-            bank_amt = users[str(ctx.message.author.id)]["bank"]
-        else:
-            wallet_amt = users[str(member.id)]["wallet"]
-            bank_amt = users[str(member.id)]["bank"]
-        if member == None:
-            embed = discord.Embed(title=f"{ctx.message.author.name}'s amount of snips", color=discord.Colour.green())
-        else:
-            embed = discord.Embed(title=f"{member.name}'s amount of snips", color=discord.Colour.green())
+            #main code
 
-        embed.add_field(name="in wallet", value=wallet_amt)
-        embed.add_field(name="in bank", value=bank_amt)
-        embed.set_footer(text = f"Command by {ctx.message.author.name}", icon_url=ctx.message.author.avatar_url)
-        await ctx.send(embed=embed)
+            if member == None:
+                cursor.execute(f"SELECT wallet, bank FROM `Economy` WHERE client_id = '{str(ctx.message.author.id)}';")
+                for i in cursor:
+                    wallet_amt, bank_amt = i[0], i[1]
+            else:
+                cursor.execute(f"SELECT wallet, bank FROM `Economy` WHERE client_id = '{str(member.id)}';")
+                for i in cursor:
+                    wallet_amt, bank_amt = i[0], i[1]
+            if member == None:
+                embed = discord.Embed(title=f"{ctx.message.author.name}'s amount of snips", color=discord.Colour.green())
+            else:
+                embed = discord.Embed(title=f"{member.name}'s amount of snips", color=discord.Colour.green())
+
+            embed.add_field(name="in wallet", value=wallet_amt)
+            embed.add_field(name="in bank", value=bank_amt)
+            embed.set_footer(text = f"Command by {ctx.message.author.name}", icon_url=ctx.message.author.avatar_url)
+            await ctx.send(embed=embed)
+            cursor.close()
+            db.close()
+
+        except:
+            if member == None:
+                await open_account(ctx.message.author.id)
+            else:
+                try:
+                    await open_account(member.id)
+                except:
+                    await ctx.send(f"{ctx.message.author.mention}, it seems that I'm not able to retrieve this person")
+                    return
+
+            users = await get_bank_data()
+
+            if member == None:
+                wallet_amt = users[str(ctx.message.author.id)]["wallet"]
+                bank_amt = users[str(ctx.message.author.id)]["bank"]
+            else:
+                wallet_amt = users[str(member.id)]["wallet"]
+                bank_amt = users[str(member.id)]["bank"]
+            if member == None:
+                embed = discord.Embed(title=f"{ctx.message.author.name}'s amount of snips", color=discord.Colour.green())
+            else:
+                embed = discord.Embed(title=f"{member.name}'s amount of snips", color=discord.Colour.green())
+
+            embed.add_field(name="in wallet", value=wallet_amt)
+            embed.add_field(name="in bank", value=bank_amt)
+            embed.set_footer(text = f"Command by {ctx.message.author.name} (backup database)", icon_url=ctx.message.author.avatar_url)
+            await ctx.send(embed=embed)
         return
 
     @commands.command()
@@ -176,7 +264,7 @@ class Economy(commands.Cog):
     @commands.command()
     @guild_only()
     async def beg(self, ctx):
-        await open_account(ctx.message.author.id)\
+        await open_account(ctx.message.author.id)
 
         outcome = random.choice([True, False])
 
