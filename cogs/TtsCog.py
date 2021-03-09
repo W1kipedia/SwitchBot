@@ -50,7 +50,7 @@ class tts(commands.Cog):
         output = gTTS(text=prompt)
         output.save("playing.mp3")
         voice = discord.utils.get(self.client.voice_clients, guild=ctx.message.guild)
-        await voice.play(discord.FFmpegPCMAudio("./playing.mp3", after=os.remove("playing.mp3")))
+        await voice.play(discord.FFmpegPCMAudio(executable="ENTER PATH FOR FFMPEG EXECUTABLE", source="./playing.mp3"))
         await voice.disconnect()
         return
 
