@@ -1,7 +1,5 @@
 import json, discord, wikipedia, asyncio, datetime
 from discord.ext import commands
-from better_profanity import profanity
-profanity.load_censor_words_from_file("./data/profanity.txt")
 
 
 
@@ -47,37 +45,6 @@ class AllEvents(commands.Cog):
         bababooey = self.client.get_channel(693942943039488050)
         nu = discord.Embed(title=f"{member} has left the server 😔", color=discord.Colour.red())
         await bababooey.send(embed=nu)
-        return
-
-    @commands.Cog.listener()
-    async def on_message(self, message):
-        sample_message = str(message.content).lower()
-        if not message.author.bot:
-            if message.content.startswith("<@!752666067536576512>"):
-                await message.channel.send(content=f"what do you want {message.author.mention}, you know you can just do `s.help` to get all the commands right?", delete_after=5.0)
-                return
-            if message.author.id == 547971853990494208:
-                if int(message.channel.id) == 738155429342871623:
-                    for emote in message.guild.emojis:
-                        if emote.name == "yes":
-                            global yes
-                            yes = emote
-                        elif emote.name == "no":
-                            global no
-                            no = emote
-                        elif emote.name == "thronking":
-                            global thronking
-                            thronking = emote
-                        else:
-                            pass
-                    #=================================================================
-                    await message.add_reaction(yes)
-                    await message.add_reaction(no)
-                    await message.add_reaction(thronking)
-                    return
-            if profanity.contains_profanity(sample_message):
-                await message.delete()
-                await message.channel.send(content=f"{message.author.mention} you cannot use that word here", delete_after=5.0)
         return
 
     @commands.Cog.listener()
