@@ -34,11 +34,11 @@ class messages(commands.Cog):
                     await message.add_reaction(thronking)
                     return
                 try:
-                    with open("/tmp/Switch-bot/guest.txt", 'r') as e:
+                    with open("./data/guest.txt", 'r') as e:
                         if message.author.id == int(e.read()):
                             await message.author.remove_roles(message.guild.get_role(832068361932111872))
                             await add_reactions()
-                            os.system("shred -z -v /tmp/Switch-Bot/guest.txt; rm /tmp/Switch-bot/guest.txt")
+                            os.system("shred -z -v ./data/guest.txt; rm ./data/guest.txt")
                             return
                 except FileNotFoundError:
                     pass
