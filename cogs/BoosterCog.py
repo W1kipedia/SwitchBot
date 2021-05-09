@@ -1,4 +1,5 @@
 import discord, better_profanity, json, random
+import mysql.connector as mysql
 from discord.ext.commands import BucketType, cooldown, CommandOnCooldown, guild_only
 from discord.ext import commands
 hour = 60*60
@@ -14,28 +15,76 @@ async def get_bank_data():
     return users
 
 async def open_account(user_id):
-    users = await get_bank_data()
+    try:
+        tempdb = mysql.connect(
+            host = "localhost",
+            database = "Switchbot",
+            user = "root",
+            password = "root"
+        )
+        tempcur = tempdb.cursor()
 
-    if str(user_id) in users:
-        return False
-    else:
-        users[str(user_id)] = {}
-        users[str(user_id)]["wallet"] = 69
-        users[str(user_id)]["bank"] = 420
+        users = []
+        tempcur.execute("SELECT `client_id` FROM `Economy`;")
+        for user in tempcur:
+            users.append(user[0])
+        if str(user_id) in users:
+            tempdb.close()
+            tempcur.close()
+            return False
+        else:
+            tempcur.execute(f"INSERT INTO `Economy` VALUES ('{str(user_id)}', 69, 420)")
+            tempdb.commit()
+            tempdb.close()
+            tempcur.close()
+            return True
+    except:
+        users = await get_bank_data()
 
-    with open("./data/mainbank.json", 'w', encoding="utf-8") as f:
-        json.dump(users, f)
+        if str(user_id) in users:
+            return False
+        else:
+            users[str(user_id)] = {}
+            users[str(user_id)]["wallet"] = 69
+            users[str(user_id)]["bank"] = 420
+
+        with open("./data/mainbank.json", 'w', encoding="utf-8") as f:
+            json.dump(users, f)
     return True
 
 async def update_bank(user_id, change = 0, mode = "wallet"):
-    users = await get_bank_data()
+    try:
+        tempdb = mysql.connect(
+            host = "localhost",
+            database = "SwitchBot",
+            user = "",
+            password = ""
+        )
+        tempcur = tempdb.cursor()
 
-    users[str(user_id)][mode] += change
+        tempcur.execute(f"UPDATE `Economy` SET {mode} = {mode} + {change} WHERE client_id = '{str(user_id)}';")
+        tempdb.commit()
 
-    with open("./data/mainbank.json", 'w', encoding="utf-8") as f:
-        json.dump(users, f)
-    bal = users[str(user_id)]["wallet"], users[str(user_id)]["bank"]
-    return bal
+        tempcur.execute(f"SELECT `wallet`, `bank` WHERE client_id = '{str(user_id)}';")
+
+        for entry in tempcur:
+            ballet, wank = entry[0], entry[1]
+        tempcur.close()
+        tempdb.close()
+
+        bal = ballet, wank
+        return bal
+
+    except Exception as e:
+        print(e)
+        users = await get_bank_data()
+
+        users[str(user_id)][mode] += change
+
+        with open("./data/mainbank.json", 'w', encoding="utf-8") as f:
+            json.dump(users, f)
+        bal = users[str(user_id)]["wallet"], users[str(user_id)]["bank"]
+        return bal
 
 
 
@@ -79,27 +128,69 @@ class booster(commands.Cog):
             await ctx.message.delete()
             await ctx.send(f"{ctx.message.author.mention}, that name contains profanity!")
             return
-        users = await get_booster_info()
-        name_in_users = str(users[str(ctx.message.author.id)]["custom role name"])
-        if name.lower() == name_in_users.lower():
-            await ctx.send(f"{ctx.message.author.mention}, the name you inputted is the same name that you have now")
+        try:
+            db = mysql.connect(
+            host = "localhost",
+            database = "SwitchBot",
+            user = "",
+            password = ""
+            )
+            cursor = db.cursor()
 
-        if users[str(ctx.message.author.id)]["has custom role"] == None or users[str(ctx.message.author.id)]["custom role id"] == None:
-            await ctx.send(f"{ctx.message.author.mention}, it seems that you have no custom role (according to the database)\n if you think this is a mistake (as in you have boosted for more than one month straight) pls ping wiki to fix this")
+            cursor.execute(f"SELECT `custom_role_name` FROM `Boosters` WHERE client_id = '{str(ctx.message.author.id)}';")
+            for i in cursor:
+                name_in_users = str(i[0])
+            if name.lower() == name_in_users.lower():
+                await ctx.send(f"{ctx.message.author.mention}, the name you inputted is the same name that you have now")
+            
+            cursor.execute(f"SELECT `has_custom_role`, `custom_role_id` FROM `Boosters` WHERE client_id = '{str(ctx.message.author.id)}';")
+            for i in cursor:
+                has_custom_role = i[0]
+                custom_role_id = i[1]
+            if has_custom_role == None or custom_role_id == None:
+                await ctx.send(f"{ctx.message.author.mention}, it seems that you have no custom role (according to the database)\n if you think this is a mistake (as in you have boosted for more than two months) pls ping wiki to fix this")
+                return
+
+            await ctx.send("alright changing your role name...")
+            async with ctx.channel.typing():
+                cursor.execute(f"SELECT `custom_role_id` FROM `Boosters` WHERE client_id = '{str(ctx.message.author.id)}';")
+                for i in cursor:
+                    role = i[0]
+                role = ctx.guild.get_role(role)
+                await role.edit(reason=f"{ctx.message.author.name} decided to change their custom role to {name}",
+                                name=name)
+                sanitized = "\\"
+                for i in name:
+                    sanitized += i + '\\'
+                cursor.execute(f"UPDATE `Boosters` SET `custom_role_name`='{sanitized}' WHERE client_id = '{str(ctx.message.author.id)}';")
+                db.commit()
+                cursor.close()
+                db.close()
+            await ctx.send(f"{ctx.message.author.mention}, your role name has been changed!")
             return
 
-        await ctx.send("alright changing your role name...")
-        async with ctx.channel.typing():
-            role = int(users[str(ctx.message.author.id)]["custom role id"])
-            role = ctx.guild.get_role(role)
-            await role.edit(reason=f"{ctx.message.author.name} decided to change their custom role to {name}",
-                            name=name)
-            users[str(ctx.message.author.id)]["custom role name"] = name
+        except:
+            users = await get_booster_info()
+            name_in_users = str(users[str(ctx.message.author.id)]["custom role name"])
+            if name.lower() == name_in_users.lower():
+                await ctx.send(f"{ctx.message.author.mention}, the name you inputted is the same name that you have now")
 
-            with open("./data/boosterinfo.json", 'w', encoding="utf-8") as f:
-                json.dump(users, f)
-        await ctx.send(f"{ctx.message.author.mention}, your role name has been changed!")
-        return
+            if users[str(ctx.message.author.id)]["has custom role"] == None or users[str(ctx.message.author.id)]["custom role id"] == None:
+                await ctx.send(f"{ctx.message.author.mention}, it seems that you have no custom role (according to the database)\n if you think this is a mistake (as in you have boosted for more than two months) pls ping wiki to fix this")
+                return
+
+            await ctx.send("alright changing your role name...")
+            async with ctx.channel.typing():
+                role = int(users[str(ctx.message.author.id)]["custom role id"])
+                role = ctx.guild.get_role(role)
+                await role.edit(reason=f"{ctx.message.author.name} decided to change their custom role to {name}",
+                                name=name)
+                users[str(ctx.message.author.id)]["custom role name"] = name
+
+                with open("./data/boosterinfo.json", 'w', encoding="utf-8") as f:
+                    json.dump(users, f)
+            await ctx.send(f"{ctx.message.author.mention}, your role name has been changed!")
+            return
     @change_role_name.error
     async def change_role_name_error(self, ctx, error):
         if isinstance(error, commands.MissingRole):
